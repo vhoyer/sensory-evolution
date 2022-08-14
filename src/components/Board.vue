@@ -3,9 +3,25 @@
     Board
 
     <div class="grid">
-      <div v-for="cell in cellList" style="display:flex;">
-        <img class="tile" :src="cell.image" alt="">
-      </div>
+      <img
+        v-for="(cell, index) in cellList"
+        class="tile"
+        :src="cell.image"
+        :style="{
+          '--x': (index % gridWidth),
+          '--y': Math.floor(index / gridWidth),
+        }"
+      >
+
+      <img
+        class="player"
+        :src="playerSprite"
+        alt="player"
+        :style="{
+          '--x': player.pos.x,
+          '--y': player.pos.y,
+        }"
+      >
     </div>
   </div>
 </template>
@@ -13,6 +29,7 @@
 <script setup>
 import { levelsSerialized } from '/entities/level';
 import { TILE } from '/entities/tile.js';
+import playerSprite from '/assets/player.png'
 
 const tileSpriteDict = Object.fromEntries(
   Object.entries(
@@ -37,12 +54,16 @@ const tileSpriteDict = Object.fromEntries(
   }),
 );
 
-console.log(tileSpriteDict)
+const currentLevel = 0;
 
-const gridWidth = levelsSerialized[0].board[0].length;
-const cellList = levelsSerialized[0].board.flat().map(i => ({
+const gridWidth = levelsSerialized[currentLevel].board[0].length;
+const cellList = levelsSerialized[currentLevel].board.flat().map(i => ({
   image: tileSpriteDict[i.type] || '',
 }));
+
+const player = {
+  pos: levelsSerialized[currentLevel].start,
+}
 </script>
 
 <style>
@@ -62,5 +83,13 @@ const cellList = levelsSerialized[0].board.flat().map(i => ({
   width: 100%;
   aspect-ratio: 1/1;
   border: 1px solid black;
+  grid-area: calc(1 + var(--y, 0))/calc(1 + var(--x, 0));
+}
+
+.player {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1/1;
+  grid-area: calc(1 + var(--y, 0))/calc(1 + var(--x, 0));
 }
 </style>
