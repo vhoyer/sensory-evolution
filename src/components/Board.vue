@@ -1,36 +1,30 @@
 <template>
-  <div>
-    Board
+  <div class="grid">
+    <img
+      v-for="(cell, index) in cellList"
+      class="tile"
+      :src="cell.image"
+      :style="{
+        '--x': (index % gridWidth),
+        '--y': Math.floor(index / gridWidth),
+      }"
+    >
 
-    <div class="grid">
-      <img
-        v-for="(cell, index) in cellList"
-        class="tile"
-        :src="cell.image"
-        :style="{
-          '--x': (index % gridWidth),
-          '--y': Math.floor(index / gridWidth),
-        }"
-      >
-
-      <img
-        class="player"
-        :src="playerSprite"
-        alt="player"
-        :style="{
-          '--x': player.pos.x,
-          '--y': player.pos.y,
-        }"
-      >
-    </div>
+    <img
+      class="player"
+      :src="playerSprite"
+      alt="player"
+      :style="{
+        '--x': props.player.pos.x,
+        '--y': props.player.pos.y,
+      }"
+    >
   </div>
 </template>
 
 <script setup>
-import { levelsSerialized } from '/entities/level';
 import { TILE } from '/entities/tile.js';
 import playerSprite from '/assets/player.png'
-
 const tileSpriteDict = Object.fromEntries(
   Object.entries(
     import.meta.glob('/assets/tile-*.png', {
@@ -54,16 +48,21 @@ const tileSpriteDict = Object.fromEntries(
   }),
 );
 
-const currentLevel = 0;
+const props = defineProps({
+  level: {
+    type: Object,
+    required: true,
+  },
+  player: {
+    type: Object,
+    required: true,
+  },
+});
 
-const gridWidth = levelsSerialized[currentLevel].board[0].length;
-const cellList = levelsSerialized[currentLevel].board.flat().map(i => ({
+const gridWidth = props.level.board[0].length;
+const cellList = props.level.board.flat().map(i => ({
   image: tileSpriteDict[i.type] || '',
 }));
-
-const player = {
-  pos: levelsSerialized[currentLevel].start,
-}
 </script>
 
 <style>
