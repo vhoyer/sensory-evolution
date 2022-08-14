@@ -36,9 +36,3 @@ body {
   padding-left: var(--space-200);
   padding-right: var(--space-200);
 }
-
-.game-screen {
-  background-color: #213547;
-  aspect-ratio: 16/9;
-  width: 100%;
-}
