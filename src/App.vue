@@ -20,8 +20,6 @@ window.level = level.value
 level.value.init();
 
 watch(level.value.state, async (levelState) => {
-  console.log('wtf', state);
-
   if (levelState === 'win') {
     state.currentLevel++;
     await nextTick();
