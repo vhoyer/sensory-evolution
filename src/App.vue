@@ -1,5 +1,5 @@
 <template>
-  <center>{{ level.name }}</center>
+  <p style="text-align: center">{{ level.name }}</p>
 
   <Board
     :level="level"
@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { reactive, computed, onMounted, onBeforeUnmount } from 'vue';
+import { reactive, computed, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 import Board from './components/Board.vue'
 import { levelsSerialized } from '/entities/level';
 
@@ -16,8 +16,19 @@ const state = reactive({
 });
 
 const level = computed(() => levelsSerialized[state.currentLevel]);
-level.value.init();
 window.level = level.value
+level.value.init();
+
+watch(level.value.state, async (levelState) => {
+  console.log('wtf', state);
+
+  if (levelState === 'win') {
+    state.currentLevel++;
+    await nextTick();
+    window.level = level.value
+    level.value.init();
+  }
+});
 
 const keydown = (event) => {
   const { key } = event;

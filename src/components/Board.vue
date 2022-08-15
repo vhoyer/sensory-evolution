@@ -21,6 +21,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { TILE, ENTITY } from '/entities/constants.js';
 import { mapKeys } from '/utils/object.js';
 
@@ -48,8 +49,8 @@ const props = defineProps({
   },
 });
 
-const gridWidth = props.level.board[0].length;
-const cellList = props.level.board.flat();
+const gridWidth = computed(() => props.level.board[0].length);
+const cellList = computed(() => props.level.board.flat());
 </script>
 
 <style>

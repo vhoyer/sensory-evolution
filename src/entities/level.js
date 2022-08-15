@@ -1,5 +1,5 @@
 import { xyRound } from '/utils/coordinates.js';
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { TILE, ENTITY } from './constants.js'
 
 const tileDictionary = {
@@ -32,6 +32,7 @@ const createBoardFromStringList = (stringRows) => {
 const createLevel = (base) => {
   return {
     ...base,
+    state: ref('paused'),
     init() {
       const { x, y } = this.start;
       const playerCell = this.board[y][x];
@@ -51,6 +52,8 @@ const createLevel = (base) => {
 
       playerCell.entities.push(this.player);
       this.entities.push(this.player);
+
+      this.state.value = 'playing';
     },
     update(delta) {
       if (import.meta.env.DEV) {
@@ -72,6 +75,10 @@ const createLevel = (base) => {
         this.board.at(xyRound(pos)).entities.push(entity);
         this.board.at(xyRound(oldPos)).entities.pop();
       });
+
+      if (this.board.at(xyRound(this.player.pos)).type === TILE.GOAL) {
+        this.state.value = 'win';
+      }
     },
   };
 }
@@ -89,6 +96,23 @@ export const levelsSerialized = [
       'u|u|u|u|u|u|u|u',
       'u|u|u|u|u|u|u|u',
       'u|u|u|u|u|u|u|u',
+    ]),
+  }),
+  createLevel({
+    name: 'Game Over',
+    start: { x: 5, y: 5 },
+    board: createBoardFromStringList([
+      'x| |x| |x|x|x| |x| |x',
+      'x| |x| |x| |x| |x| |x',
+      ' |x| | |x| |x| |x| |x',
+      ' |x| | |x| |x| |x| |x',
+      ' |x| | |x|x|x| |x|x|x',
+      ' | | | | | | | | | | ',
+      'x| |x| | |x| | |x| |x',
+      'x| |x| | |x| | |x|x|x',
+      'x| |x| | |x| | |x| |x',
+      'x|x|x| | |x| | |x| |x',
+      'x| |x| | |x| | |x| |x',
     ]),
   }),
 ];
