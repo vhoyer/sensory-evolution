@@ -5,11 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "rimraf ./build.zip",
     "build": "vite build",
+    "postbuild": "cd dist/ && bestzip ../build.zip .",
     "preview": "vite preview"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",
+    "bestzip": "^2.2.1",
+    "rimraf": "^3.0.2",
     "vite": "^3.0.7"
   },
   "dependencies": {
