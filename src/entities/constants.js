@@ -9,8 +9,7 @@ export const TILE = Object.fromEntries([
   'BLOCK',
 ].map(k => [k, Symbol(k)]));
 
-export function createTile(type = TILE.SPACE) {
-  return {
-    type,
-  };
-}
+// Entities dictionary
+export const ENTITY = Object.fromEntries([
+  'PLAYER',
+].map(k => [k, Symbol(k)]));
